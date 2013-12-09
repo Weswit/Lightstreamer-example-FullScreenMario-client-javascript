@@ -1,121 +1,48 @@
-FullScreenMario
-===============
 
-An HTML5 remake of the original Super Mario Brothers - expanded for modern browsing.
-------------------------------------------------------------------------------------
+# Lightstreamer FullScreenMario Demo Client for JavaScript #
 
-Here's a quick set of cheat codes you can use during the game. If you're using this through the <a href="http://www.fullscreenmario.com">fullscreenmario.com</a> UI, you'll have to reference everything as a member of 'game' (which is a link to the frame containing FSM).
+This project is forked from [FullScreenMario](https://github.com/Diogenesthecynic/FullScreenMario), an HTML5 remake of the original Super Mario Brothers. 
+The goal of this fork is to create a multiplayer version of <b>FullScreenMario</b>, based on Lightstreamer.
 
-Game Powerups
--------------
-<table>
+## FullScreenMario Demo ##
 
-  <tr>
-    <th>Command</th>
-    <th>Result</th>
-  </tr>
-  
-  <tr>
-    <td><code>marioShroom(mario)</code></td>
-    <td>The equivalent of Mario touching a Mushroom or FireFlower item.</td>
-  </tr>
-  
-  <tr>
-    <td><code>marioStar(mario)</code></td>
-    <td>The equivalent of Mario touching a Star item. Note that if you want Mario to be invincible for the rest of the current map, use <code>++mario.star</code>.</td>
-  </tr>
-  
-  <tr>
-    <td><code>scrollMario(X)</code></td>
-    <td>Scrolls the window horizontally by X, keeping Mario in the same spot relative to the screen.</td>
-  </tr>
-  
-  <tr>
-    <td><code>scrollTime(T)</code></td>
-    <td>Floats Mario through the rest of the level (beware, this is best used on the Random worlds!).</td>
-  </tr>
-  
-  <tr>
-    <td><code>fastforward(T)</code></td>
-    <td>Sets the game speed to <code>1+T</code>. T=1 results in double the speed, and T=0 is normal speed.</td>
-  </tr>
+This <b>FullScreenMario Demo</b> implements a simple gaming/collaborative application fed in real time via a Lightstreamer server.<br>
+Once logged in, the user can start move his or her Super Mario avatar and will see other user's avatar moving too. For each user a Super Mario avatar is created, on bottom of which the nickname chosen by the user is displayed.<br>
 
-</table>
+# Deploy #
 
+Before you can run the demo some dependencies need to be solved:
 
-Adding Things
--------------
-<table>
+-  Get the lightstreamer.js file from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download) 
+   and put it in the src/ folder of the demo (if that is the case, please create it). Alternatively you can build a lightstreamer.js file from the 
+   [online generator](http://www.lightstreamer.com/distros/Lightstreamer_Allegro-Presto-Vivace_5_1_1_Colosseo_20130305/Lightstreamer/DOCS-SDKs/sdk_client_javascript/tools/generator.html).
+   In that case be sure to include the LightstreamerClient, Subscription, DynaGrid, and StatusWidget modules and to use the "Use AMD" version.
+-  Get the require.js file form [requirejs.org](http://requirejs.org/docs/download.html) and put it in the src/[demo_name]/js folder of the demo.
+-  Get the gamecontroller.min.js file from [HTML5 Virtual Game Controller](https://github.com/austinhallock/html5-virtual-game-controller) and put it in the src folder of the demo.
 
-  <tr>
-    <th>Command</th>
-    <th>Result</th>
-  </tr>
-  
-  <tr>
-    <td>
-      <code>addThing(ThingFunction, xloc, yloc)</code>
-      <br>or</br>
-      <code>addThing(new Thing(ThingFunction, arg1, arg2), xloc, yloc)</code>
-    </td>
-    <td>Creates a new instance of a Thing, such as <code>Goomba</code> or <code>Koopa</code>, at the specified location. Thing functions are located as separate in things.js; in the future they will be stored as JSON objects.</td>
-  </tr>
-  
-  <tr>
-    <td><code>killNormal(MyThing)</code></td>
-    <td>Kills a specified Thing. You may find them listed under <code>window.characters</code>, <code>window.solids</code>, and <code>window.scenery</code>.</td>
-  </tr>
-  
-</table>
+You can deploy this demo in order to use the Lightstreamer server as Web server or in any external Web Server you are running. 
+If you choose the former case, please create the folders <LS_HOME>/pages/demos/FullScreenMario then copy here the contents of the /src folder of this project.<br>
+The client demo configuration assumes that Lightstreamer Server, the Full-Screen-Mario Demo Adapters and this client are launched on the same machine. If you need to targeting a different Lightstreamer server please search this line:
+```js
+var lsClient = new LightstreamerClient(protocolToUse+"//localhost:8080","MARIO");
+```
+in src/lsClient.js file and change it accordingly.<br>
+Anyway the [Full-Screen-Mario Demo Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java) hase to be deployed in your local Lightstreamer server instance.<br>
+The demo is now ready to be launched.
 
-Map Shifting
-------------
+# See Also #
 
-<table>
+## Lightstreamer Adapters needed by this demo client ##
 
-  <tr>
-    <th>Command</th>
-    <th>Result</th>
-  </tr>
+* [Full-Screen-Mario Demo Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java)
 
-  <tr>
-    <td>
-      <code>setMap(A,B)</code>
-      <br>or</br>
-      <code>setMap([A,B])</code>
-    </td>
-    <td>Starts the World A-B map immediately. If it doesn't exist (such as when maps aren't loaded via AJAX yet), it will log a complaint gracefully.</td>
-  </tr>
-  
-  <tr>
-    <td>
-      <code>setMapRandom()</code>
-      <br>or</br>
-      <code>setMapRandom("Overworld")</code>
-    </td>
-    <td>Starts the corresponding random map immediately, similar to setMap. Named options are (Overworld by default):
-      <ul>
-        <li>Overworld</li>
-        <li>Underworld</li>
-        <li>Underwater</li>
-        <li>Sky</li>
-        <li>Castle</li>
-      </ul>
-    </td>
-  </tr>
-  
-  <tr>
-    <td>
-      <code>shiftToLocation(N)</td>
-    </td>
-    <td>
-      Shifts to the Nth location in the current map. For example, <code>setMap(1,1); shiftToLocation(2);</code> brings the user to the Underworld section of World 1-1. Note that maps are stored under Maps/WorldAB.js as function bodies.
-    </td>
-  </tr>
-  
-</table>
+## Similar demo clients that may interest you ##
 
-Developers
-----------
+* [Lightstreamer Room-Ball Demo for JavaScript Client](https://github.com/Weswit/Lightstreamer-example-RoomBall-client-javascript)
 
+# Lightstreamer Compatibility Notes #
+
+- Compatible with Lightstreamer JavaScript Client library version 6.0 or newer.
+
+# License #
 This is released under the <a href="http://creativecommons.org/licenses/by-nc-sa/3.0/">Attribution Non-Commercial Share-Alike</a> license. Full Screen Mario is meant to be both a proof of concept and an entertaining pasttime, not a source of income</a>.

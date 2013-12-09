@@ -316,7 +316,11 @@ canvas {
 }
 
 
-
+.highTitle { font-family: 'Roboto Condensed',Arial,Helvetica,sans-serif; color: #555555; font-size: 60px; font-weight: 800; line-height: 36px; text-align: center; margin-bottom: 40px;  margin-top: 80px;}
+.highFeature { font-family: 'Roboto Condensed',Arial,Helvetica,sans-serif; color: #555555; line-height: 20px; font-size: 40px; font-weight: 400; text-align: left; }
+.highError { font-family: 'Roboto Condensed',Arial,Helvetica,sans-serif; color: #aa0000; line-height: 20px; font-size: 28px; font-weight: 400; text-align: center; margin-top: 50px; }
+#loginDiv {height:100%;width:100%;position:absolute;top:0;left:0;z-index:86;background-color:white}
+#ladingDiv {height:100%;width:100%;position:absolute;top:0;left:0;z-index:871;background-color:white}
 
 /*
   Thanks so much to the people who worked to recreate the 8-bit fonts!

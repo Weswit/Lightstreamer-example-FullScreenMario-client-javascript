@@ -179,7 +179,7 @@ function getSpriteFromLibrary(thing) {
       return;
     }
     // If it's more complicated, search for it
-    if(sprite.constructor.name != Uint8ArrayName) {
+    if(sprite.constructor != Uint8ClampedArray) {
       sprite = findSpriteInLibrary(thing, sprite, classes);
     }
       
@@ -246,7 +246,7 @@ function expandObtainedSpriteMultiple(sprites, thing, width, height) {
   // Expand each array from the multiple sprites to parsed
   for(part in sprites) {
     // If it's an actual sprite array, parse it
-    if((sprite = sprites[part]).constructor.name == Uint8ArrayName) {
+    if((sprite = sprites[part]) instanceof Uint8ClampedArray) {
       ++thing.num_sprites;
       parsed[part] = expandObtainedSprite(sprite, thing, width, height, true);
     }
@@ -295,7 +295,7 @@ function findSpriteInLibrary(thing, current, classes) {
         nogood = false;
         switch(check.constructor.name) {
           // If it's a sprite array, you've found it.
-          case Uint8ArrayName: case "SpriteMultiple":
+          case "Uint8ClampedArray":  case "SpriteMultiple":
             return check;
           // If it's an object, recurse normally
           case "Object": 
@@ -312,7 +312,7 @@ function findSpriteInLibrary(thing, current, classes) {
     if(!nogood && current) {
       switch(current.constructor.name) {
         // You did it!
-        case Uint8ArrayName: case "SpriteMultiple": return current;
+        case "Uint8ClampedArray": case "SpriteMultiple": return current;
         // Keep going
         case "Object": 
           continue;
@@ -394,11 +394,25 @@ function drawThingOnCanvas(context, me) {
       topc = me.top;
   if(leftc > innerWidth) return;
   
+  
   // If there's just one sprite, it's pretty simple
   // drawThingOnCanvasSingle(context, me.canvas, me, leftc, topc);
   if(me.num_sprites == 1) drawThingOnCanvasSingle(context, me.canvas, me, leftc, topc);
   // Otherwise some calculations will be needed
   else drawThingOnCanvasMultiple(context, me.canvases, me.canvas, me, leftc, topc);
+  
+  if (me.label) {
+    context.font = "bold 12px sans-serif";
+    
+    context.fillStyle = "black";
+    context.fillText(me.label.text, me.left, me.top-2);
+    
+
+    context.fillStyle = me.label.color; 
+    context.fillText(me.label.text, me.left, me.top-3);
+    
+  }
+  
 }
 // Used for the vast majority of sprites, where only one sprite is drawn
 function drawThingOnCanvasSingle(context, canvas, me, leftc, topc) {

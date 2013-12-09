@@ -1,6 +1,6 @@
 /* Data.js */
 // A few functions to store and display ~persistent data
-// "use strict";
+"use strict";
 
 // window.data stores the references to data and elements
 function resetData() {
@@ -8,7 +8,7 @@ function resetData() {
   var check;
   if(check = document.getElementById("data_display"))
     body.removeChild(check);
-  
+
   if(!window.data) {
     window.data = new Data();
     // setDataDisplay();
@@ -67,8 +67,8 @@ function startDataTime() {
 function updateDataTime(me) {
   // If the time direction isn't up (random map), check for timing
   if(me.dir != 1) {
-    if(me.amount == 100) playCurrentThemeHurry(); 
-    else if(me.amount <= 0) killMario(mario, true);
+    if(me.amount == 100) playCurrentThemeHurry();
+    else if(me.amount <= 0) killMario(mario);
   }
   // If time is still enabled, change it by 1
   if(!notime) {
@@ -128,9 +128,16 @@ function setLives(num) {
   updateDataElement(data.lives);
 }
 
-function storeMarioStats() {
+function storeMarioStats(mario) {
+  if (mario != window.mario)
+	return;
+
   data.mariopower = mario.power;
 }
-function clearMarioStats() {
+
+function clearMarioStats(mario) {
+  if (mario != window.mario)
+	return;
+
   data.mariopower = mario.power = 1;
 }

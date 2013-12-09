@@ -10,7 +10,7 @@
 function Thing(type) {
   // If there isn't a type, don't do anything
   if(arguments.length == 0 || !type) return;
-  
+
   // Otherwise make this based off the type
   // Make sure this is legally created
   var self = this === window ? new Thing() : this,
@@ -23,30 +23,30 @@ function Thing(type) {
   self.yvel = this.yvel || 0;
   if(self.tolx == null) self.tolx = 0;
   if(self.toly == null) self.toly = unitsized8;
-  
+
   self.movement = self.movement; // why..?
   self.collide = self.collide || function() {}; // To do: why does taking this out mess things up?
   self.death = self.death || killNormal;
   self.animate = self.animate || emergeUp;
-  
+
   if(self.width * unitsize < quads.width && self.height * unitsize < quads.height)
     self.maxquads = 4; // self could be done with modular stuff... beh
   else self.maxquads = quads.length;
-  
+
   self.quads = new Array(self.maxquads)
   self.overlaps = [];
-  
+
   self.title = self.title || type.name;
   self.spritewidth = self.spritewidth || self.width;
   self.spriteheight = self.spriteheight || self.height;
   self.sprite = "";
-  
+
   try { setContextStuff(self, self.spritewidth, self.spriteheight); }
   catch(err) {
     log("Thing context fail", err, self.title, self);
     setTimeout(function() { setContextStuff(self, self.spritewidth, self.spriteheight); }, 1);
   }
-  
+
   return self;
 }
 
@@ -124,7 +124,7 @@ function addText(html, left, top) {
   var element = createElement("div", {innerHTML: html, className: "text",
     left: left,
     top: top,
-    onclick: body.onclick || canvas.onclick, 
+    onclick: body.onclick || canvas.onclick,
     style: {
       marginLeft: left + "px",
       marginTop: top + "px"
@@ -173,7 +173,7 @@ function pushPreThing(type, xloc, yloc, extras, more) {
 /*
  * Characters (except Mario, who has his own .js)
  */
- 
+
 
 /*
  * Items
@@ -188,7 +188,7 @@ function Mushroom(me, type) {
   me.collide = collideFriendly;
   me.jump = mushroomJump;
   me.death = killNormal;
-  
+
   var name = "mushroom";
   switch(type) {
     case 1: me.action = gainLife; name += " gainlife"; break;
@@ -289,10 +289,10 @@ function Shell(me, smart) {
 function hitShell(one, two) {
   // Assuming two is shell
   if(one.type == "shell" && two.type != one.type) return hitShell(two, one);
-  
+
   switch(one.type) {
     // Hitting a wall
-    case "solid": 
+    case "solid":
       if(two.right < one.right) {
         playLocal("Bump", one.left);
         setRight(two, one.left);
@@ -305,18 +305,18 @@ function hitShell(one, two) {
         two.moveleft = false;
       }
     break;
-    
+
     // Hitting Mario
     case "mario":
       var shelltoleft = objectToLeft(two, one),
           mariojump = one.yvel > 0 && one.bottom <= two.top + unitsizet2;
-      
+
       // Star Mario is pretty easy
       if(one.star) {
         scoreMarioShell(one, two);
         return two.death(two, 2);
       }
-      
+
       // If the shell is already being landed on by Mario:
       if(two.landing) {
         // If the recorded landing direction hasn't changed:
@@ -335,7 +335,7 @@ function hitShell(one, two) {
         }
         return;
       }
-      
+
       // Mario is kicking the shell (either hitting a still shell or jumping onto a shell)
       if(two.xvel == 0 || mariojump) {
         // Mario has has hit the shell in a dominant matter. You go, Mario!
@@ -348,7 +348,7 @@ function hitShell(one, two) {
           two.height -= unitsized8;
           updateSize(two);
         }
-        
+
         // If the shell's xvel is 0 (standing still)
         if(two.xvel == 0) {
           if(shelltoleft) {
@@ -364,7 +364,7 @@ function hitShell(one, two) {
         }
         // Otherwise set the xvel to 0
         else two.xvel = 0;
-        
+
         // Mario is landing on the shell (movements, xvels already set)
         if(mariojump) {
           play("Kick");
@@ -391,7 +391,7 @@ function hitShell(one, two) {
           one.death(one);
       }
     break;
-    
+
     // Shell hitting another shell
     case "shell":
       // If one is moving...
@@ -414,7 +414,7 @@ function hitShell(one, two) {
         one.death(one);
       }
     break;
-    
+
     default:
       switch(one.group) {
         case "enemy":
@@ -429,14 +429,14 @@ function hitShell(one, two) {
               killNormal(one);
             } // Otherwise just kill it normally
             else killFlip(one);
-            
+
             play("Kick");
             score(one, findScore(two.enemyhitcount), true);
             ++two.enemyhitcount;
           } // Otherwise the enemy just turns around
           else one.moveleft = objectToLeft(one, two);
         break;
-        
+
         case "item":
           if(one.type == "shell") {
             if(two.xvel) killFlip(one);
@@ -450,8 +450,8 @@ function hitShell(one, two) {
 }
 function moveShell(me) {
   if(me.xvel != 0) return;
-  
-  if(++me.counting == 350) { 
+
+  if(++me.counting == 350) {
     addClass(me, "peeking");
     me.peeking = true;
     me.height += unitsized8;
@@ -525,7 +525,7 @@ function Koopa(me, smart, fly) {
   me.moveleft = me.skipoverlaps = true;
   me.group = "enemy";
   me.smart = smart; // will it run off the edge
-  var name = "koopa"; 
+  var name = "koopa";
   name += (me.smart ? " smart" : " dumb");
   if(me.smart) name+= " smart";
   if(fly) {
@@ -551,7 +551,7 @@ function Koopa(me, smart, fly) {
     else me.movement = moveSimple;
   }
   me.collide = collideEnemy;
-  me.death = killKoopa; 
+  me.death = killKoopa;
   setCharacter(me, name);
   addSpriteCycleSynched(me, ["one", "two"]);
   me.toly = unitsizet2;
@@ -564,7 +564,7 @@ function killKoopa(me, big) {
   else spawn = new Thing(Shell, me.smart);
   // Puts it on stack, so it executes immediately after upkeep
   addEvent(
-    function(spawn, me) { 
+    function(spawn, me) {
       addThing(spawn, me.left, me.bottom - spawn.height * unitsize);
       spawn.moveleft = me.moveleft;
     },
@@ -607,7 +607,7 @@ function movePirhanaNew(me, amount) {
   me.counter += amount;
   shiftVert(me, amount);
   shiftVert(me.visual_scenery, amount);
-  
+
   // Height is 0
   if(me.counter <= 0 || me.counter >= me.countermax) {
     me.movement = false;
@@ -641,17 +641,17 @@ function marioAboveEnemy(mario, enemy) {
 function collideEnemy(one, two) {
   // Check for life
   if(!characterIsAlive(one) || !characterIsAlive(two)) return;
-  
+
   // Check for nocollidechar
   if((one.nocollidechar && !two.mario) || (two.nocollidechar && !one.mario)) return;
-  
+
   // Items
   if(one.group == "item") {
     if(one.collide_primary) return one.collide(two, one);
     // if(two.height < unitsized16 || two.width < unitsized16) return;
     return;
   }
-  
+
   // Mario on top of enemy
   if(!map.underwater && one.mario && ((one.star && !two.nostar) || (!two.deadly && objectOnTop(one, two)))) {
     // Enforces toly
@@ -673,17 +673,17 @@ function collideEnemy(one, two) {
     removeClasses(one, "running skidding jumping one two three")
     // addClass(one, "running three");
     one.hopping = true;
-    if(mario.power == 1)  setMarioSizeSmall(one);
+    if(one.power == 1)  setMarioSizeSmall(one);
   }
-  
+
   // Mario getting hit by an enemy
   else if(one.mario) {
     if(!marioAboveEnemy(one, two)) one.death(one);
   }
-  
+
   // Two regular characters colliding
   else two.moveleft = !(one.moveleft = objectToLeft(one, two));
-}  
+}
 
 function Podoboo(me, jumpheight) {
   me.width = 7;
@@ -695,7 +695,7 @@ function Podoboo(me, jumpheight) {
   me.movement = movePodobooInit;
   me.collide = collideEnemy;
   me.betweentime = 70;
-  
+
   setCharacter(me, "podoboo");
 }
 function movePodobooInit(me) {
@@ -714,7 +714,7 @@ function podobooJump(me) {
   me.yvel = me.speed + me.gravity;
   me.movement = movePodobooUp;
   me.hidden = false;
-  
+
   // Sadly, this appears to be occasionally necessary
   setThingSprite(me);
 }
@@ -755,10 +755,10 @@ function HammerBro(me) {
 function moveHammerBro(me) {
   // Slide side to side
   me.xvel = Math.sin(Math.PI * (me.counter += .007)) / 2.1;
-  
+
   // Make him turn to look at mario if needed
   lookTowardMario(me);
-  
+
   // If falling, don't collide with solids
   me.nocollidesolid = me.yvel < 0 || me.falling;
 }
@@ -911,7 +911,7 @@ function killBowser(me, big) {
     me.nofall = false;
     return killFlip(me);
   }
-  
+
   if(++me.deathcount == 5) {
     me.yvel = me.speed = me.movement = 0;
     killFlip(me, 350);
@@ -978,7 +978,7 @@ function moveBlooper(me) {
   if(me.squeeze) me.yvel = max(me.yvel + .021, .7); // going down
   else me.yvel = min(me.yvel - .035, -.7); // going up
   shiftVert(me, me.yvel, true);
-  
+
   if(!me.squeeze) {
     if(mario.left > me.right + unitsizet8) {
       // Go to the right
@@ -1012,18 +1012,18 @@ function CheepCheep(me, red, jumping) {
   me.width = me.height = 8;
   me.group = "enemy";
   var name = "cheepcheep " + (red ? "red" : "");
-  
+
   // Doubled for fun! (also editor checking)
   me.red = red;
   setCheepVelocities(me);
-  
+
   if(jumping) {
     name += " jumping";
     me.jumping = true;
     me.movement = moveCheepJumping;
-  } 
+  }
   else me.movement = moveCheepInit;
-  
+
   me.nofall = me.nocollidesolid = me.nocollidechar = true;
   me.death = killFlip;
   me.collide = collideEnemy;
@@ -1061,7 +1061,7 @@ function startCheepSpawn() {
       spawn.yvel = unitsize * -2.33;
       flipHoriz(spawn);
       spawn.movement = function(me) {
-        if(me.top < ceilmax) me.movement = moveCheepJumping; 
+        if(me.top < ceilmax) me.movement = moveCheepJumping;
         else shiftVert(me, me.yvel);
       };
     }, 21, -1
@@ -1268,7 +1268,7 @@ function coinEmerge(me, solid) {
   gainCoin();
   me.nocollide = me.alive = me.nofall = me.emerging = true;
   determineThingQuadrants(me);
-  
+
   if(me.blockparent) me.movement = coinEmergeMoveParent;
   else me.movement = coinEmergeMove;
   me.yvel = -unitsize;
@@ -1302,7 +1302,9 @@ function coinEmergeMoveParent(me) {
 /*
  * Mario
  */
- function Mario(me) {
+ function Mario(me,title) {
+
+  me.title = title || "Mario";
   setMarioSizeSmall(me);
   me.walkspeed = unitsized2;
   me.canjump = me.nofiredeath = me.nofire = me.mario = me.nokillend = 1;
@@ -1322,7 +1324,7 @@ function coinEmergeMoveParent(me) {
   if(map.underwater) {
     me.swimming = true;
     addSpriteCycle(me, ["swim1", "swim2"], "swimming", 5);
-  }  
+  }
 }
 
 function placeMario(xloc, yloc) {
@@ -1356,7 +1358,7 @@ function thingStoreVelocity(me, keepmove) {
   me.nofallOld = me.nofall || false;
   me.nocollideOld = me.nocollide || false;
   me.movementOld = me.movement || me.movementOld;
-  
+
   me.nofall = me.nocollide = true;
   me.xvel = me.yvel = false;
   if(!keepmove) me.movement = false;
@@ -1372,7 +1374,10 @@ function thingRetrieveVelocity(me, novel) {
   me.nocollide = me.nocollideOld || false;
 }
 
-function removeCrouch() {
+function removeCrouch(mario) {
+  if (mario == null)
+	mario= window.mario;
+
   mario.crouching = false;
   mario.toly = mario.tolyold || 0;
   if(mario.power != 1) {
@@ -1390,72 +1395,72 @@ function marioShroom(me) {
   if(me.power == 3) return;
   me.shrooming = true;
   (++me.power == 2 ? marioGetsBig : marioGetsFire)(me);
-  storeMarioStats();
+  storeMarioStats(me);
 }
 // These three modifiers don't change power levels.
 function marioGetsBig(me, noanim) {
   setMarioSizeLarge(me);
   me.keys.down = 0;
-  removeClasses(mario, "crouching small");
+  removeClasses(me, "crouching small");
   updateBottom(me, 0);
   updateSize(me);
   if(!noanim) {
     // pause();
     // Mario cycles through 'shrooming1', 'shrooming2', etc.
-    addClass(mario, "shrooming");
+    addClass(me, "shrooming");
     var stages = [1,2,1,2,3,2,3];
     for(var i = stages.length - 1; i >= 0; --i)
       stages[i] = "shrooming" + stages[i];
-    
+
     // Clear Mario's movements
-    thingStoreVelocity(mario);
-    
+    thingStoreVelocity(me);
+
     // The last event in stages clears it, resets Mario's movements, and stops
     stages.push(function(me, settings) {
       me.shrooming = settings.length = 0;
       addClass(me, "large");
       removeClasses(me, "shrooming shrooming3");
-      thingRetrieveVelocity(mario);
+      thingRetrieveVelocity(me);
       return true;
     });
-    
+
     addSpriteCycle(me, stages, "shrooming", 6);
   }
   else addClass(me, "large");
 }
 function marioGetsSmall(me) {
-  var bottom = mario.bottom;
+  var bottom = me.bottom;
   // pause();
   me.keys.down = 0;
   thingStoreVelocity(me);
   addClass(me, "small");
   flicker(me);
   // Step one
-  removeClasses(mario, "running skidding jumping fiery");
-  addClass(mario, "paddling");
+  removeClasses(me, "running skidding jumping fiery");
+  addClass(me, "paddling");
   // Step two (t+21)
-  addEvent(function(mario) {
-    removeClass(mario, "large");
-    setMarioSizeSmall(mario);
-    setBottom(mario, bottom - unitsized2);
-  }, 21, mario);
+  addEvent(function(me) {
+    removeClass(me, "large");
+    setMarioSizeSmall(me);
+    setBottom(me, bottom - unitsized2);
+  }, 21, me);
   // Step three (t+42)
-  addEvent(function(mario) {
-    thingRetrieveVelocity(mario, false);
-    mario.nocollidechar = true;
-    removeClass(mario, "paddling");
-    if(mario.running || mario.xvel) addClass(mario, "running");
-    addEvent(setThingSprite, 1, mario);
-  }, 42, mario);
+  addEvent(function(me) {
+    thingRetrieveVelocity(me, false);
+    me.nocollidechar = true;
+    removeClass(me, "paddling");
+    if(me.running || me.xvel) addClass(me, "running");
+    addEvent(setThingSprite, 1, me);
+  }, 42, me);
   // Step four (t+70);
-  addEvent(function(mario) {
-    mario.nocollidechar = false;
-  }, 70, mario);
+  addEvent(function(me) {
+    me.nocollidechar = false;
+  }, 70, me);
 }
 function marioGetsFire(me) {
   removeClass(me, "intofiery");
   addClass(me, "fiery");
-  mario.shrooming = false;
+  me.shrooming = false;
 }
 function setMarioSizeSmall(me) {
   setSize(me, 8, 8, true);
@@ -1470,7 +1475,7 @@ function setMarioSizeLarge(me) {
 function moveMario(me) {
   // Not jumping
   if(!me.keys.up) me.keys.jump = 0;
-  
+
   // Jumping
   else if(me.keys.jump > 0 && (me.yvel <= 0 || map.underwater) ) {
     if(map.underwater) marioPaddles(me);
@@ -1490,7 +1495,7 @@ function moveMario(me) {
       me.yvel = max(me.yvel - dy, map.maxyvelinv);
     }
   }
-  
+
   // Crouching
   if(me.keys.crouch && !me.crouching && me.resting) {
     if(me.power != 1) {
@@ -1506,7 +1511,7 @@ function moveMario(me) {
     if(me.resting.actionTop)
       me.resting.actionTop(me, me.resting, me.resting.transport);
   }
-  
+
   // Running
   var decel = 0 ; // (how much to decrease)
   // If a button is pressed, hold/increase speed
@@ -1541,19 +1546,19 @@ function moveMario(me) {
   if(me.xvel > decel) me.xvel-=decel;
   else if(me.xvel < -decel) me.xvel+=decel;
   else if(me.xvel!=0) {
-	me.xvel = 0;
-	if(!window.nokeys && me.keys.run==0) {
+  me.xvel = 0;
+  if(!window.nokeys && me.keys.run==0) {
       if(me.keys.left_down)me.keys.run=-1;
       else if(me.keys.right_down)me.keys.run=1;
-    }  
+    }
   }
-  
+
   // Movement mods
   // Slowing down
   if(Math.abs(me.xvel) < .14) {
     if(me.running) {
       me.running = false;
-      if(mario.power == 1) setMarioSizeSmall(me);
+      if(me.power == 1) setMarioSizeSmall(me);
       removeClasses(me, "running skidding one two three");
       addClass(me, "still");
       clearClassCycle(me, "running");
@@ -1581,7 +1586,7 @@ function moveMario(me) {
       me.moveleft = true;
     }
   }
-  
+
   // Resting stops a bunch of other stuff
   if(me.resting) {
     // Hopping
@@ -1638,7 +1643,7 @@ function moveMarioVine(me) {
       shiftHoriz(me, me.keys.run, true);
     return unattachMario(me);
   }
-  
+
   // If Mario is moving up, simply move up
   if(me.keys.up) {
     me.animatednow = true;
@@ -1651,15 +1656,15 @@ function moveMarioVine(me) {
     if(me.bottom > attached.bottom - unitsizet4) return unattachMario(me);
   }
   else me.animatednow = false;
-  
+
   if(me.animatednow && !me.animated) {
     addClass(me, "animated");
   } else if(!me.animatednow && me.animated) {
     removeClass(me, "animated");
   }
-  
+
   me.animated = me.animatednow;
-  
+
   if(me.bottom < -16) { // ceilmax (104) - ceillev (88)
     locMovePreparations(me);
     if(!attached.locnum && map.random) goToTransport(["Random", "Sky", "Vine"]);
@@ -1678,7 +1683,7 @@ function unattachMario(me) {
 function marioHopsOff(me, solid, addrun) {
   removeClasses(me, "climbing running");
   addClass(me, "jumping");
-  
+
   me.piping = me.nocollide = me.nofall = false;
   me.gravity = gravity /= 2;
   me.xvel = 3.5;
@@ -1689,7 +1694,7 @@ function marioHopsOff(me, solid, addrun) {
     mario.movement = moveMario;
     if(addrun) addClass(me, "running");
   }, 21, me);
-  
+
 }
 
 function marioFires() {
@@ -1740,7 +1745,7 @@ function killMario(me, big) {
     if(!big && me.power > 1) {
       play("Power Down");
       me.power = 1;
-      storeMarioStats();
+      storeMarioStats(me);
       return marioGetsSmall(me);
     }
     // Otherwise, if this isn't a big one, animate a death
@@ -1772,7 +1777,7 @@ function killMario(me, big) {
   me.nocollide = me.nomove = nokeys = 1;
   --data.lives.amount;
   if(!map.random) data.score.amount = data.scoreold;
-  
+
   // If it's in editor, (almost) immediately set map
   if(window.editing) {
     setTimeout(function() {
@@ -1802,11 +1807,11 @@ function marioDropsIn() {
   clearOldMario();
   placeMario(unitsizet16, unitsizet8 * -1 + (map.underwater * unitsize * 24));
   flicker(mario);
-  
+
   // Give a Resting Stone for him to land, unless it's underwater...
   if(!map.underwater) {
     mario.nocollide = true;
-    
+
     addEvent(function() {
       mario.nocollide = false;
       addThing(new Thing(RestingStone), mario.left, mario.bottom + mario.yvel);
@@ -1822,18 +1827,18 @@ function gameOver() {
   pause();
   pauseTheme();
   play("Game Over");
-  
+
   var innerHTML = "<div style='font-size:49px;padding-top: " + (innerHeight / 2 - 28/*49*/) + "px'>GAME OVER</div>";
   // innerHTML += "<p style='font-size:14px;opacity:.49;width:490px;margin:auto;margin-top:49px;'>";
   // innerHTML += "You have run out of lives. Maybe you're not ready for playing real games...";
   innerHTML += "</p>";
-  
+
   body.className = "Night"; // to make it black
   body.innerHTML = innerHTML;
-  
+
   window.gamecount = Infinity;
   clearMarioStats();
-  
+
   setTimeout(gameRestart, 7000);
 }
 
@@ -1894,10 +1899,10 @@ function brickBump(me, character) {
   me.up = character;
   if(character.power > 1 && !me.contents)
     return addEvent(brickBreak, 2, me, character); // wait until after collision testing to delete (for coins)
-  
+
   // Move the brick
   blockBumpMovement(me);
-  
+
   // If the brick has contents,
   if(me.contents) {
     // Turn normal Mushrooms into FireFlowers if Mario is large
@@ -1915,7 +1920,7 @@ function brickBump(me, character) {
           if(me.lastcoin) makeUsedBlock(me);
           addEvent( function(me) { me.lastcoin = true; }, 245, me );
         } else makeUsedBlock(me);
-      }, 
+      },
       7,
       me
     );
@@ -2066,7 +2071,7 @@ function vineMovement(me) {
 function touchVine(me, vine) {
   if(!me.mario || me.attached || me.climbing || me.bottom > vine.bottom + unitsizet2) return;
   vine.attached = me;
-  
+
   me.attached = vine;
   me.nofall = me.skipoverlaps = true;
   me.xvel = me.yvel = me.resting = me.jumping = me.jumpcount = me.running = 0;
@@ -2075,7 +2080,7 @@ function touchVine(me, vine) {
   me.movementsave = me.movement;
   me.movement = moveMarioVine;
   me.keys = new Keys();
-  
+
   // Reset classes to be in vine mode
   clearClassCycle(me, "running");
   removeClass(me, "running skidding");
@@ -2084,12 +2089,12 @@ function touchVine(me, vine) {
   addClass(me, "climbing");
   // setSize(me, 7, 8, true);
   me.climbing = addSpriteCycle(me, ["one", "two"], "climbing");
-  
+
   // Make sure you're looking at the vine, and from the right distance
   lookTowardThing(me, vine);
   if(!me.attachleft) setRight(me, vine.left + unitsizet4);
   else setLeft(me, vine.right - unitsizet4);
-  
+
 }
 
 function Springboard(me) {
@@ -2128,11 +2133,11 @@ function moveMarioSpringDown(me) {
   // Make sure it's hard to slide off
   if(me.left < me.spring.left + unitsizet2 || me.right > me.spring.right - unitsizet2)
     me.xvel /= 1.4;
-  
+
   reduceSpringHeight(me.spring, me.spring.tension);
   setBottom(me, me.spring.top, true);
   me.spring.tension /= 2;
-  
+
   updateSize(me.spring);
 }
 function moveMarioSpringUp(me) {
@@ -2145,9 +2150,9 @@ function moveMarioSpringUp(me) {
 function moveSpringUp(spring) {
   reduceSpringHeight(spring, -spring.tension);
   spring.tension *= 2;
-  if(spring == mario.spring) 
+  if(spring == mario.spring)
     setBottom(mario, spring.top, true);
-  
+
   if(spring.height > spring.heightnorm) {
     if(spring == mario.spring) {
       mario.yvel = max(-unitsizet2, spring.tensionsave * -.98);
@@ -2187,7 +2192,7 @@ function RestingStoneUnused(me) {
   removeClass(me, "hidden");
   setThingSprite(mario);
 }
-function RestingStoneUsed(me) { 
+function RestingStoneUsed(me) {
   if(!mario.resting) return killNormal(me);
 }
 
@@ -2210,7 +2215,7 @@ function CastleBlock(me, arg1, arg2) {
   }
   // Otherwise it's invisible
   else setSolid(me, "castleblockinvis");
-  
+
   // Since there are fireballs, set that stuff
   if(length) {
     me.balls = new Array(length);
@@ -2277,7 +2282,7 @@ function CastleAxe(me) {
 function CastleAxeFalls(me, collider) {
   var axe = collider.axe;
   // Don't do this if Mario would fall without the bridge
-  if(!me.mario || 
+  if(!me.mario ||
     me.right < axe.left + unitsize ||
     me.bottom > axe.bottom - unitsize) return;
   // Immediately kill the axe and collider
@@ -2336,7 +2341,7 @@ function collideCastleNPC(me, collider) {
       addEvent(proliferate, i * 70, text[i].element, {style: {visibility: "visible"}});
     addEvent(endLevel, (i + 3) * 70);
   }, 21, collider.text);
-} 
+}
 
 function TreeTop(me, width) {
   // Tree trunks are scenery
@@ -2435,7 +2440,7 @@ function Scale(me, width, settings) {
   me.width = width * 4;
   me.spritewidth = me.spriteheight = 5;
   me.repeat = me.nocollide = true;
-  
+
   setSolid(me, "scale");
 }
 
@@ -2470,15 +2475,15 @@ function CastleDoorDetector(me) {
   me.hidden = true;
 }
 function FlagCollision(me, detector) {
-  if(!me || !me.mario) return killNormal(me);
+  if(!me || !me.mario || (me != window.mario)) return killNormal(me);
   window.detector = detector;
   pauseAllSounds();
   play("Flagpole");
-  
+
   // Reset and clear most stuff, including killing all other characters
   killOtherCharacters();
   nokeys = notime = mario.nofall = 1;
-  
+
   // Mostly clear Mario, and set him to the pole's left
   mario.xvel = mario.yvel = mario.keys.up = mario.keys.jump = map.canscroll = map.ending = mario.movement = 0;
   mario.nocollidechar = true;
@@ -2488,7 +2493,7 @@ function FlagCollision(me, detector) {
   updateSize(me);
   addSpriteCycleManual(me, ["one", "two"], "climbing");
   marioRemoveStar(mario); // just in case
-  
+
   // Start the movement
   var mebot = false,
       flagbot = false,
@@ -2558,12 +2563,12 @@ function FlagOff(me, pole) {
 // Me === Mario
 function endLevelPoints(me, detector) {
   if(!me || !me.mario) return;
-  
+
   // Stop the game, and get rid of mario and the detectors
   notime = nokeys = true;
   killNormal(detector);
   killNormal(me);
-  
+
   // Determine the number of fireballs (1, 3, and 6 become not 0)
   var numfire = getLast(String(data.time.amount));
   if(!(numfire == 1 || numfire == 3 || numfire == 6)) numfire = 0;
@@ -2596,10 +2601,10 @@ function endLevelFireworks(me, numfire, detector) {
     nextnum = timer * (i + 2) * 42;
   }
   else nextnum = 0;
-  
+
   // The actual endLevel happens after all the fireworks are done
   nextfunc = function() { setTimeout(function() { endLevel(); }, nextnum); };
-  
+
   // If the Stage Clear sound is still playing, wait for it to finish
   if(sounds["Stage Clear"] && !sounds["Stage Clear"].paused)
     sounds["Stage Clear"].addEventListener("ended", function() { addEvent(nextfunc, 35); });
@@ -2667,10 +2672,10 @@ function WarpWorld(me) {
 }
 
 function setWarpWorldInit(me) {
-  // Just reduces the size 
+  // Just reduces the size
   shiftHoriz(me, me.width * unitsized2);
   me.width /= 2;
-  updateSize(me); 
+  updateSize(me);
   me.movement = false;
 }
 
@@ -2718,7 +2723,7 @@ function resetScenery() {
       "ShroomTrunk": [8, 8],
       "String": [1, 1],
       "TreeTrunk": [8, 8],
-      "Water": { 
+      "Water": {
           0: 4,
           1: 5,
           spriteCycle: ["one", "two", "three", "four"]
@@ -2827,7 +2832,7 @@ function resetScenery() {
       ]
     }
   };
-  
+
   processSceneryPatterns(Scenery.patterns);
 }
 
@@ -2862,7 +2867,7 @@ function Sprite(me, name, reps) {
     log("No sprite template found for", name);
     return;
   }
-  // Sizing is gotten from the listing under setScenery 
+  // Sizing is gotten from the listing under setScenery
   me.width = (me.spritewidth = template[0]) * (reps[0] || 1);
   me.height = (me.spriteheight = template[1]) * (reps[1] || 1);
   me.unitwidth = me.spritewidth * unitsize;
@@ -2871,7 +2876,7 @@ function Sprite(me, name, reps) {
   me.repeat = true;
   setScenery(me, "scenery " + name);
   me.title = name;
-  
+
   // If the listing has a SpriteCycle, do that
   if(template.spriteCycleTimer) addSpriteCycle(me, spriteCycleTimer, spriteCycleTimer || undefined)
 }
@@ -2889,7 +2894,7 @@ function LocationShifter(me, loc, size) {
 function collideLocationShifter(me, shifter) {
   if(!me.mario) return;
   shifter.nocollide = mario.piping = true;
-  addEvent( 
+  addEvent(
     function(me) {
       shiftToLocation(shifter.loc);
       if(map.random) entryRandom(me);

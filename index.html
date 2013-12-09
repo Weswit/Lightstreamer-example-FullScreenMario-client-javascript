@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <title>Full Screen Mario</title>
+
+    <link href="mario.css" rel="stylesheet">
+    <link href="Fonts/stylesheet.css" rel="stylesheet">
+
+    <!-- Lightstreamer -->
+    <script src="require.js"></script>
+    <script src="lightstreamer.js"></script>
+    <script src="gamecontroller.min.js"></script>
+
+	<!-- Mario -->
+    <script src="data.js"></script>
+    <script src="editor.js"></script>
+    <script src="events.js"></script>
+    <script src="generator.js"></script>
+    <script src="library.js"></script>
+    <script src="load.js"></script>
+    <script src="maps.js"></script>
+    <script src="mario.js"></script>
+    <script src="quadrants.js"></script>
+    <script src="sounds.js"></script>
+    <script src="sprites.js"></script>
+    <script src="things.js"></script>
+    <script src="toned.js"></script>
+    <script src="triggers.js"></script>
+    <script src="upkeep.js"></script>
+    <script src="utility.js"></script>
+
+    <link href='http://fonts.googleapis.com/css?family=Roboto+Condensed:700,400' rel='stylesheet' type='text/css'>
+
+</head>
+<body>
+
+	<div id="loginDiv">
+	   <!-- global is evil -->
+	  <form id="loginForm" onSubmit="login.submitNick(); return false;" style="margin: 0px; text-align: center; align: center">
+	    <div id="text_1" class="highTitle" >Who are you?</div>
+	    <input id="user_nick" type="text" maxlength="15" value="" class="highFeature" disabled />
+	    <input id="nick_button" type="submit" value="Let's go!" class="highFeature" style="height: 60px" disabled />
+	    <div id="errorDiv" class="highError" > </div>
+	  </form>
+
+  </div>
+  <div id="loadingDiv" class="highTitle" >Loading...</div>
+  <script>
+	  require(["./login","./Gamepad","./Orientation"], function(login,Gamepad,Orientation) {
+	    login.init(
+	      function(userName,changed) {
+
+
+	        Orientation.startListening();
+
+	        if(changed) {
+	          alert("Nick already taken. You're now " + userName);
+	        }
+	        window.userGuid = userName;
+	        document.getElementById("loginDiv").style.display = "none";
+	        setTimeout(FullScreenMario,1000);
+	      },
+	      function() {
+	        Gamepad.destroy();
+          Orientation.stopListening();
+	        canvas.parentElement.removeChild(canvas);
+	        document.getElementById("loginDiv").style.display = "";
+	      }
+	    );
+	    window.login = login;
+	  });
+
+  </script>
+
+</body>
+</html>

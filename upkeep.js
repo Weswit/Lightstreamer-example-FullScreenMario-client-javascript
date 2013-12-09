@@ -5,28 +5,32 @@ function upkeep() {
   if(window.paused) return;
   // window.nextupk = requestAnimationFrame(upkeep);
   window.nextupk = setTimeout(upkeep, timer);
-  
+
   // Adjust for differences in performance
   adjustFPS();
-  
+
   // Quadrants upkeep
   determineAllQuadrants();
-  
+
   // Solids upkeep
   maintainSolids();
-  
+
   // Character upkeep
   maintainCharacters();
-  
+
   // Mario specific
-  maintainMario();
-  
+  maintainMario(window.mario);
+
+  // Other Marios specific
+  for (user in window.otherMarios)
+	maintainMario(window.otherMarios[user]);
+
   // Texts upkeep, if there are any
   if(texts.length) maintainTexts();
-  
+
   // Events upkeep
   handleEvents();
-  
+
   refillCanvas();
 }
 
@@ -34,10 +38,10 @@ function adjustFPS() {
   window.time_now = now();
   var time_diff = time_now - time_prev,
       fps_actual = roundDigit(1000 / time_diff, .001);
-  
+
   window.fps = roundDigit((.7 * fps) + (.3 * fps_actual), .01);
   window.realtime = fps_target / fps;
-  
+
   window.time_prev = time_now;
 }
 
@@ -79,13 +83,13 @@ function maintainCharacters(update) {
       if(!character.nofall) character.yvel += character.gravity || map.gravity;
       character.yvel = min(character.yvel, map.maxyvel);
     } else character.yvel = 0;
-    
+
     // Position updating and collision detection
     updatePosition(character);
     determineThingQuadrants(character);
     character.under = character.undermid = false;
     determineThingCollisions(character);
-    
+
     // Resting tests
     if(character.resting) {
       if(!characterOnResting(character, character.resting)) {
@@ -95,13 +99,13 @@ function maintainCharacters(update) {
         setBottom(character, character.resting.top);
       }
     }
-    
+
     // Movement or deletion
     // To do: rethink this...
     //// Good for performance if gamescreen.bottom - gamescreen.top is saved in screen and updated on shift
     // To do: is map.shifting needed?
     if(character.alive) {
-      if(character.type != "mario" && !map.shifting && 
+      if(character.type != "mario" && !map.shifting &&
           (character.numquads == 0 || character.left > delx) && !character.outerok) {
           // (character.top > gamescreen.bottom - gamescreen.top || character.left < + quads.width * -1)) {
         deleteThing(character, characters, i);
@@ -113,13 +117,16 @@ function maintainCharacters(update) {
       }
     }
     else if(!map.shifting) deleteThing(character, characters, i);
-    
+
   }
 }
 
-function maintainMario(update) {
+function maintainMario(mario) {
+  if (mario == null)
+	return;
+
   if(!mario.alive) return;
-  
+
   // Mario is falling
   if(mario.yvel > 0) {
     if(!map.underwater) mario.keys.jump = 0;
@@ -138,7 +145,7 @@ function maintainMario(update) {
       }
     }
     // Mario has fallen too far
-    if(!mario.piping && !mario.dying && mario.top > gamescreen.deathheight) {
+    if((mario == window.mario) && !mario.piping && !mario.dying && mario.top > gamescreen.deathheight) {
       // If the map has an exit loc (cloud world), transport there
       if(map.exitloc) {
         // Random maps will pretend he died
@@ -155,10 +162,10 @@ function maintainMario(update) {
       killMario(mario, 2);
     }
   }
-  
+
   // Mario is moving to the right
   if(mario.xvel > 0) {
-    if(mario.right > gamescreen.middlex) {
+    if ((mario == window.mario) && (mario.right > gamescreen.middlex)) {
       // If Mario is to the right of the gamescreen's middle, move the gamescreen
       if(mario.right > gamescreen.right - gamescreen.left)
         mario.xvel = min(0, mario.xvel);
@@ -169,10 +176,14 @@ function maintainMario(update) {
     // Stop Mario from going to the left.
     mario.xvel = max(0, mario.xvel);
   }
-  
+
   // Mario is hitting something (stop jumping)
   if(mario.under) mario.jumpcount = 0;
-  
+
+  // Scroll window only for local Mario
+  if (mario != window.mario)
+  	return;
+
   // Scrolloffset is how far over the middle mario's right is
   // It's multiplied by 0 or 1 for map.canscroll
   window.scrolloffset = (map.canscroll/* || (map.random && !map.noscroll)*/) * (mario.right - gamescreen.middlex);

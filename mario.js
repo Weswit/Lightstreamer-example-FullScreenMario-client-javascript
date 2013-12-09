@@ -3,34 +3,25 @@
 
 function FullScreenMario() {
   var time_start = Date.now();
-  
+
   // Thanks, Obama...
   ensureLocalStorage();
-  
+
+  //////////////// Lightstreamer - End
+
   // I keep this cute little mini-library for some handy functions
   TonedJS(true);
-  
+
   // It's useful to keep references to the body
   window.body = document.body;
   window.bodystyle = body.style;
-  
+
   // Know when to shut up
   window.verbosity = {Maps: false,
                       Sounds: false,
                       };
-  
+
   // Oh, HTML5.
-  // http://matt.scharley.me/2012/03/09/monkey-patch-name-ie.html
-  if(Function.prototype.name === undefined && Object.defineProperty !== undefined) {
-    Object.defineProperty(Function.prototype, 'name', {
-        get: function() {
-            var funcNameRegex = /function\s([^(]{1,})\(/,
-                results = (funcNameRegex).exec((this).toString());
-            return (results && results.length > 1) ? results[1].trim() : "";
-        },
-        set: function(value) {}
-    });
-  }
   window.requestAnimationFrame = window.requestAnimationFrame
                            || window.mozRequestAnimationFrame
                            || window.webkitRequestAnimationFrame
@@ -43,11 +34,8 @@ function FullScreenMario() {
                            || window.msCancelRequestAnimationFrame
                            || clearTimeout;
 
-  window.Uint8ClampedArray = window.Uint8ClampedArray
-                          || window.Uint8Array
-                          || Array;
-  // Because the shiv will mess this up for sprites.js detection                          
-  window.Uint8ArrayName = Uint8ClampedArray.name || "Uint8Array"; // ie
+  // THANKS INTERNET EXPLORER
+  if(!window.Uint8ClampedArray) window.Uint8ClampedArray = Array;
 
   // Resetting everything may take a while
   resetMeasurements();
@@ -58,48 +46,62 @@ function FullScreenMario() {
   resetTriggers();
   resetSeed();
   resetSounds();
-  
+
   // With that all set, set the map to World11.
   window.gameon = true;
   setMap(1,1);
-  
+
   // Load sounds after setting the map, since it uses clearAllTimeouts
   startLoadingSounds();
-  
+
   log("It took " + (Date.now() - time_start) + " milliseconds to start.");
+
+  require("./login").loadingComplete();
+
+  if (window.innerHeight > (450+118+20)) {
+
+    var d = document.createElement("div");
+    d.style.position = "absolute";
+    d.style.zIndex = 84;
+    d.style.width = "100%"
+    d.style.textAlign = "center";
+    d.style.fontWeight = "bold";
+    d.style.bottom = "20px";
+    document.body.appendChild(d);
+
+    var bitly = document.createElement("div");
+    bitly.innerHTML = "bit.ly/mor777";
+    bitly.style.fontSize = "100px";
+    bitly.style.fontFamily = "arial";
+    d.appendChild(bitly);
+
+    console.log("Chrome is recommended.");
+    console.log("Mario, Super Mario Brothers, and all associated games and media are property of Nintendo and/or Nintendo of America Inc., and are protected by United States and international copyright, trademark and other intellectual property laws.");
+    console.log("Based on the project by Josh Goldberg available at http://www.fullscreenmario.com/");
+
+  }
+
+
 }
 
-// To do: add in a real polyfill
+// There's no need for a real polyfill, this is just used as an array
 function ensureLocalStorage() {
-  var ls_ok = false;
-  try {
-  if(!window.hasOwnProperty("localStorage"))
+  if(typeof(window.localStorage) == 'undefined')
     window.localStorage = { crappy: true };
-  
-  // Some browsers (mainly IE) won't allow it on a local machine anyway
-  if(window.localStorage) ls_ok = true;
- }
- catch(err) {
-    ls_ok = false;
-  }
-  if(!ls_ok) {
-    var nope = document.body.innerText = "It seems your browser does not allow localStorage!";
-    throw nope;
-  }
 }
 
 /* Basic reset operations */
 function resetMeasurements() {
   resetUnitsize(4);
   resetTimer(1000 / 60);
-  
+
   window.jumplev1 = 32;
   window.jumplev2 = 64;
   window.ceillev  = 88; // The floor is 88 spaces (11 blocks) below the yloc = 0 level
   window.ceilmax  = 104; // The floor is 104 spaces (13 blocks) below the top of the screen (yloc = -16)
   window.castlev  = -48;
   window.paused   = true;
-  
+
   resetGameScreen();
   if(!window.parentwindow) window.parentwindow = false;
 }
@@ -132,13 +134,13 @@ function getGameScreen() {
   // Middlex is static and only used for scrolling to the right
   this.middlex = (this.left + this.right) / 2;
   // this.middlex = (this.left + this.right) / 3;
-  
+
   // This is the bottom of the screen - water, pipes, etc. go until here
   window.botmax = this.height - ceilmax;
   if(botmax < unitsize) {
     body.innerHTML = "<div><br>Your screen isn't high enough. Make it taller, then refresh.</div>";
   }
-  
+
   // The distance at which Things die from falling
   this.deathheight = this.bottom + 48;
 }
@@ -169,8 +171,6 @@ function resetGameState(nocount) {
   resetQuadrants();
   // Keep a history of pressed keys
   window.gamehistory = [];
-  // Keep a history of pressed keys
-  window.gamehistory = [];
   // Clear audio
   pauseAllSounds();
   sounds = {};
@@ -179,17 +179,17 @@ function resetGameState(nocount) {
 function scrollWindow(x, y) {
   x = x || 0; y = y || 0;
   var xinv = -x, yinv = -y;
-  
+
   gamescreen.left += x; gamescreen.right += x;
   gamescreen.top += y; gamescreen.bottom += y;
-  
+
   shiftAll(characters, xinv, yinv);
   shiftAll(solids, xinv, yinv);
   shiftAll(scenery, xinv, yinv);
   shiftAll(quads, xinv, yinv);
   shiftElements(texts, xinv, yinv);
   updateQuads(xinv);
-  
+
   if(window.playediting) scrollEditor(x, y);
 }
 function shiftAll(stuff, x, y) {

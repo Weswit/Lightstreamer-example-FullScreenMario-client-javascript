@@ -2,7 +2,7 @@
 // Contains all needed helper functions not in toned.js
 
 /* General stuff */
- 
+
 // Recursively goes down sub-objects of obj
 // Path is ["path", "to", "target"], where num is how far along the path it is
 function followPath(obj, path, num) {
@@ -17,13 +17,13 @@ function clearAllTimeouts() {
   while(id--) clearTimeout(id);
 }
 
-// Width and height are given as number of pixels (to scale; unitsize) 
+// Width and height are given as number of pixels (to scale; unitsize)
 function getCanvas(width, height, stylemult) {
   var canv = createElement("canvas", {
     width: width,
     height: height
   });
-  
+
   // If necessary, make this thing's visual style
   if(stylemult) {
     // stylemult is 1 by default, but may be something else (typically unitsize)
@@ -33,10 +33,10 @@ function getCanvas(width, height, stylemult) {
       height: (height * stylemult) + "px"
     });
   }
-  
+
   // For speed
   canv.getContext("2d").webkitImageSmoothingEnabled = false
-  
+
   return canv;
 }
 
@@ -54,7 +54,7 @@ function fastforward(num) {
       step();
     unpause();
   }
-  
+
   requestAnimationFrame(resume);
 }
 
@@ -70,14 +70,14 @@ function specifyTimer(timerin) {
 function changeUnitsize(num) {
   if(!num) return;
   resetUnitsize(num);
-  
+
   function setter(arr) {
     for(i in arr) {
       updateSize(arr[i]);
       updatePosition(arr[i]);
     }
   }
-  
+
   setter(solids);
   setter(characters);
 }
@@ -122,7 +122,7 @@ function updateSize(me) {
 function reduceHeight(me, dy, see) {
   me.top += dy;
   me.height -= dy / unitsize;
-  
+
   if(see) {
     updateSize(me);
   }
@@ -240,15 +240,15 @@ function increaseHeightTop(me, dy, spriter) {
 function determineThingCollisions(me) {
   if(me.nocollide) return;
   else if(!me.resting || me.resting.yvel == 0) me.resting = false;
-  
+
   // Cur is each quadrant this object is in, and other is each other object in them.
   var cur, others, other, contents,
       i, j, leni, lenj;
-  
+
   // Unless directed not to, make sure this doesn't overlap anything
   // Overlaps are actually added a few lines down, under collisions for solids
   if(!me.skipoverlaps) checkOverlap(me);
-  
+
   // For each quadrant the thing is in:
   for(i = 0, leni = me.numquads; i < leni; ++i) {
     cur = me.quads[i];
@@ -256,10 +256,10 @@ function determineThingCollisions(me) {
     // For each other thing in that quadrant:
     for(j = 0, lenj = cur.numthings; j < lenj; ++j) {
       other = others[j];
-      
+
       if(me == other) break; // breaking prevents double collisions
       if(!other.alive || other.scenery || other.nocollide) continue; // not removed in upkeep
-      
+
       // The .hidden check is required. Try the beginning of 2-1 without it.
       // visual_scenery is also necessary because of Pirhanas (nothing else uses that)
       if(objectsTouch(me, other) && (me.mario || (!other.hidden || !(other.visual_scenery && other.visual_scenery.hidden)) || solidOnCharacter(other, me))) {
@@ -267,7 +267,7 @@ function determineThingCollisions(me) {
         if(other.character)
           // if(charactersTouch(me, other))
             objectsCollided(me, other);
-        
+
         // Collisions for solids, slightly less so (overlaps)
         else if(!me.nocollidesolid) {
           objectsCollided(me, other);
@@ -277,10 +277,10 @@ function determineThingCollisions(me) {
       }
     }
   }
-  
+
   if(me.undermid) me.undermid.bottomBump(me.undermid, me);
   else if(me.under instanceof Thing) me.under.bottomBump(me.under, me);
-  
+
 }
 
 // give solid a tag for overlap
@@ -298,11 +298,11 @@ function checkOverlap(me) {
     // mid = me.omid is the midpoint of what is being overlapped
     var overlaps = me.overlaps,
         right = {right: -Infinity},
-        left = {left: Infinity}, 
+        left = {left: Infinity},
         mid = 0, over,
         i;
     me.overlapfix = true;
-    
+
     for(i in overlaps) {
       over = overlaps[i];
       mid += getMidX(over);
@@ -350,10 +350,10 @@ function objectsCollided(one, two) {
   if(one.solid) {
     if(!two.solid) return objectsCollided(two, one);
   }
-  
+
   // Up solids are special
   if(two.up && one != two.up) return characterTouchesUp(one, two);
-  
+
   // Otherwise, regular collisions
   if(two.solid || one.mario)
     two.collide(one, two);
@@ -371,7 +371,7 @@ function objectOnTop(one, two) {
   if(one.type == "solid" && two.yvel > 0) return false;
   if(one.yvel < two.yvel && two.type != "solid") return false;
   if(one.mario && one.bottom < two.bottom && two.group == "enemy") return true;
-  return(  (one.left + unitsize < two.right && one.right - unitsize > two.left) && 
+  return(  (one.left + unitsize < two.right && one.right - unitsize > two.left) &&
   (one.bottom - two.yvel <= two.top + two.toly || one.bottom <= two.top + two.toly + abs(one.yvel - two.yvel)));
 }
 // Like objectOnTop, but more specifically used for characterOnSolid and characterOnResting
@@ -379,15 +379,15 @@ function objectOnSolid(one, two) {
   return(
     ( one.left + unitsize < two.right &&
       one.right - unitsize > two.left )
-    && 
-    ( one.bottom - one.yvel <= two.top + two.toly || 
+    &&
+    ( one.bottom - one.yvel <= two.top + two.toly ||
       one.bottom <= two.top + two.toly + abs(one.yvel - two.yvel) )
   );
 }
 function solidOnCharacter(solid, me) {
   if(me.yvel >= 0) return false;
   me.midx = getMidX(me);
-  return me.midx > solid.left && me.midx < solid.right && 
+  return me.midx > solid.left && me.midx < solid.right &&
   (solid.bottom - solid.yvel <= me.top + me.toly - me.yvel);
 }
 // This would make the smart koopas stay on the edges more intelligently
@@ -406,7 +406,7 @@ function characterOnResting(me, solid) {
 
 function characterTouchedSolid(me, solid) {
   if(solid.up == me) return;
-  
+
   // Me on top of the solid
   if(characterOnSolid(me, solid)) {
     if(solid.hidden) return;
@@ -414,7 +414,7 @@ function characterTouchedSolid(me, solid) {
     // Meh.
     if(me.mario && map.underwater) removeClass(me, "paddling");
   }
-  
+
   // Solid on top of me
   else if(solidOnCharacter(solid, me)) {
     var mid = me.left + me.width * unitsize / 2;
@@ -429,9 +429,9 @@ function characterTouchedSolid(me, solid) {
     me.yvel = solid.yvel;
     if(me.mario) me.keys.jump = 0;
   }
-  
+
   if(solid.hidden) return;
-  
+
   // Character bumping into the side
   //// .midx is given by solidOnCharacter
   if(!characterNotBumping(me, solid) && !objectOnTop(me, solid) && !objectOnTop(solid, me) && !me.under && me != solid.up) {
@@ -442,7 +442,7 @@ function characterTouchedSolid(me, solid) {
       me.xvel = max(me.xvel, 0);
       shiftHoriz(me, min(solid.right - unitsize - me.left, unitsized2), true);
     }
-    
+
     // Non-Marios are instructed to flip
     if(!me.mario) {
       me.moveleft = !me.moveleft;
@@ -461,7 +461,7 @@ function characterNotBumping(me, solid) {
 
 function characterTouchesUp(me, solid) {
   switch(me.group) {
-    case "item": 
+    case "item":
       me.moveleft = getMidX(me) <= getMidX(solid) + unitsized2;
       characterHops(me);
     break;
@@ -469,6 +469,9 @@ function characterTouchesUp(me, solid) {
       me.animate(me);
     break;
     default:
+      if (me.mario)
+        return;
+
       me.death(me, 2);
       scoreEnemyBelow(me);
     break;
@@ -552,7 +555,7 @@ function moveSimple(me) {
       if(!me.noflip) unflipHoriz(me);
     } else {
       if(!me.noflip) flipHoriz(me);
-      me.xvel = me.speed; 
+      me.xvel = me.speed;
     }
     me.direction = me.moveleft;
   }
@@ -560,7 +563,7 @@ function moveSimple(me) {
 
 function moveSmart(me) {
   moveSimple(me);
-  
+
   if(me.yvel == 0 && (!me.resting || (offResting(me)))) {
     if(me.moveleft) shiftHoriz(me, unitsize, true);
     else shiftHoriz(me, -unitsize, true);
@@ -622,7 +625,7 @@ function setPlatformEndpoints(me) {
 function collideTransport(me, solid) {
   characterTouchedSolid(me, solid);
   if(solid != me.resting) return;
-  
+
   solid.movement = movePlatformNorm;
   solid.collide = characterTouchedSolid;
   solid.xvel = unitsized2;
@@ -632,11 +635,11 @@ function collideTransport(me, solid) {
 // To do: split this into .partner and whatnot
 function moveFalling(me) {
   if(me != mario.resting) return me.yvel = 0;
-  
+
   // Since Mario is on me, fall
   shiftVert(me, me.yvel += unitsized8);
   setBottom(mario, me.top);
-  
+
   // After a velocity threshold, always fall
   if(me.yvel >= unitsize * 2.8) {
     me.freefall = true;
