@@ -20,7 +20,7 @@ Before you can run the demo some dependencies need to be solved:
 -  Get the `gamecontroller.min.js` file from [HTML5 Virtual Game Controller](https://github.com/austinhallock/html5-virtual-game-controller) and put it in the root folder of the demo.
 
 You can deploy this demo in order to use the Lightstreamer server as Web server or in any external Web Server you are running. 
-If you choose the former case, please create the folders <LS_HOME>/pages/demos/FullScreenMario then copy here the contents of the root folder of this project.<br>
+If you choose the former case, please create the folders `<LS_HOME>/pages/FullScreenMario` then copy here the contents of the root folder of this project.<br>
 The client demo configuration assumes that Lightstreamer Server, the Full-Screen-Mario Demo Adapters and this client are launched on the same machine. If you need to targeting a different Lightstreamer server please search this line:
 ```js
 var lsClient = new LightstreamerClient(protocolToUse+"//localhost:8080","MARIO");
