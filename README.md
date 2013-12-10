@@ -5,6 +5,7 @@ The goal of this fork is to create a multi-player version of <b>FullScreenMario<
 This project is just a proof of concept, to experiment a multi-player game based on a client side mode.
 
 ## FullScreenMario Demo ##
+![screenshot](screen.png)
 
 This <b>FullScreenMario Demo</b> implements a simple gaming/collaborative application fed in real time via a Lightstreamer server.<br>
 It's based on client-side mode:
