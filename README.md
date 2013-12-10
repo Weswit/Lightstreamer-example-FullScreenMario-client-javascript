@@ -1,11 +1,18 @@
 # Lightstreamer Full-Screen-Mario Demo Client for JavaScript #
 
 This project is forked from [FullScreenMario](https://github.com/Diogenesthecynic/FullScreenMario), an HTML5 remake of the original Super Mario Brothers. 
-The goal of this fork is to create a multiplayer version of <b>FullScreenMario</b>, based on Lightstreamer.
+The goal of this fork is to create a multi-player version of <b>FullScreenMario</b>, based on Lightstreamer.
+This project is just a proof of concept, to experiment a multi-player game based on a client side mode.
 
 ## FullScreenMario Demo ##
 
 This <b>FullScreenMario Demo</b> implements a simple gaming/collaborative application fed in real time via a Lightstreamer server.<br>
+It's based on client-side mode:
+- physics runs on the client side only,
+- user's commands (key press, joystick move, device tilt, accelerometer, etc.) are streamed from client to server,
+- commands of all other users are broadcast from server to each client,
+- each client calculate the world independently,
+
 Once logged in, the user can start move his or her Super Mario avatar and will see other user's avatar moving too. For each user a Super Mario avatar is created, on bottom of which the nickname chosen by the user is displayed.<br>
 
 # Deploy #
