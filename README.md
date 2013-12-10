@@ -1,4 +1,4 @@
-# Lightstreamer Full-Screen-Mario Demo Client for JavaScript #
+# Lightstreamer - FullScreenMario Demo - HTML Client #
 
 This project is forked from [FullScreenMario](https://github.com/Diogenesthecynic/FullScreenMario), an HTML5 remake of the original Super Mario Brothers. 
 The goal of this fork is to create a multi-player version of <b>FullScreenMario</b>, based on Lightstreamer.
@@ -45,11 +45,11 @@ The demo is now ready to be launched.
 
 ## Lightstreamer Adapters needed by this demo client ##
 
-* [Full-Screen-Mario Demo Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java)
+* [Lightstreamer - FullScreenMario Demo - Java  Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java)
 
 ## Similar demo clients that may interest you ##
 
-* [Lightstreamer Room-Ball Demo for JavaScript Client](https://github.com/Weswit/Lightstreamer-example-RoomBall-client-javascript)
+* [Lightstreamer - Room-Ball Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RoomBall-client-javascript)
 
 # Lightstreamer Compatibility Notes #
 
