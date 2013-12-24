@@ -1,5 +1,7 @@
 # Lightstreamer - FullScreenMario Demo - HTML Client #
 
+<!-- START DESCRIPTION lightstreamer-example-fullscreenmario-client-javascript -->
+
 This project is forked from [FullScreenMario](https://github.com/Diogenesthecynic/FullScreenMario), an HTML5 remake of the original Super Mario Brothers. 
 The goal of this fork is to create a multi-player version of <b>FullScreenMario</b>, based on Lightstreamer.
 This project is just a proof of concept, to experiment a multi-player game based on a client side mode.
@@ -20,6 +22,7 @@ The demo includes the following client-side technologies:
 * A [Subscription](http://www.lightstreamer.com/docs/client_javascript_uni_api/Subscription.html) containing 1 item, subscribed to in <b>COMMAND</b> mode. Each added player automatically provokes an underlying subscription to a sub-item in <b>MERGE</b> mode, to get the real-time position and state for that specific player from another feed. When a player is deleted, the underlying sub-item is automatically unsubscribed from.
 * The user messages are sent to the Lightstreamer Server using the [LightstreamerClient.sendMessage](http://www.lightstreamer.com/docs/client_javascript_uni_api/LightstreamerClient.html#sendMessage) utility.
 
+<!-- END DESCRIPTION lightstreamer-example-fullscreenmario-client-javascript -->
 
 # Deploy #
 
@@ -46,7 +49,10 @@ The demo is now ready to be launched.
 
 ## Lightstreamer Adapters needed by this demo client ##
 
+<!-- START RELATED_ENTRIES -->
 * [Lightstreamer - FullScreenMario Demo - Java  Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java)
+
+<!-- END RELATED_ENTRIES -->
 
 ## Similar demo clients that may interest you ##
 
