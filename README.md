@@ -7,7 +7,7 @@ The goal of this fork is to create a multi-player version of <b>FullScreenMario<
 This project is just a proof of concept, to experiment a multi-player game based on a client side mode.
 
 ## FullScreenMario Demo ##
-![screenshot](screen.png)
+![screenshot](screen_new.png)
 
 This <b>FullScreenMario Demo</b> implements a simple gaming/collaborative application fed in real time via a Lightstreamer server.<br>
 It's based on client-side mode:
@@ -47,14 +47,14 @@ The demo is now ready to be launched.
 
 # See Also #
 
-## Lightstreamer Adapters needed by this demo client ##
+## Lightstreamer Adapters Needed by This Demo Client ##
 
 <!-- START RELATED_ENTRIES -->
 * [Lightstreamer - FullScreenMario Demo - Java  Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java)
 
 <!-- END RELATED_ENTRIES -->
 
-## Similar demo clients that may interest you ##
+## Related Projects ##
 
 * [Lightstreamer - Room-Ball Demo - HTML Client](https://github.com/Weswit/Lightstreamer-example-RoomBall-client-javascript)
 
