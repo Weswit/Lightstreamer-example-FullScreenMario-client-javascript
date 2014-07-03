@@ -28,8 +28,7 @@ The demo includes the following client-side functionalities:
 
 ## Install
 
-Note that, as prerequisite, the [FullScreenMario Demo - Java Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java#clients-using-this-adapter) has to be deployed in your local Lightstreamer Server instance. Please check out that project and follow the installation instructions provided with it.
-
+* As prerequisite, the [FullScreenMario Demo - Java Adapter](https://github.com/Weswit/Lightstreamer-example-FullScreenMario-adapter-java#clients-using-this-adapter) has to be deployed in your local Lightstreamer Server instance. Please check out that project and follow the installation instructions provided with it.
 * Download this project
 * Get the `lightstreamer.js` file from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download) 
   and put it in the `src` folder of the demo. Alternatively you can build a `lightstreamer.js` file from the 
