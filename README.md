@@ -21,8 +21,8 @@ It's based on client-side mode:
 Once logged in, the user can start move his or her Super Mario avatar and will see other user's avatar moving, too. For each user, a Super Mario avatar is created, on the bottom of which the nickname chosen by the user is displayed.
 
 The demo includes the following client-side functionalities:
-* A [Subscription](http://www.lightstreamer.com/docs/client_javascript_uni_api/Subscription.html) containing 1 item, subscribed to in <b>COMMAND</b> mode. Each added player automatically provokes an underlying subscription to a sub-item in **MERGE** mode, to get the real-time position and state for that specific player from another feed. When a player is deleted, the underlying sub-item is automatically unsubscribed from.
-* The user messages are sent to the Lightstreamer Server using the [LightstreamerClient.sendMessage](http://www.lightstreamer.com/docs/client_javascript_uni_api/LightstreamerClient.html#sendMessage) utility.
+* A [Subscription](https://lightstreamer.com/api/ls-web-client/latest/Subscription.html) containing 1 item, subscribed to in <b>COMMAND</b> mode. Each added player automatically provokes an underlying subscription to a sub-item in **MERGE** mode, to get the real-time position and state for that specific player from another feed. When a player is deleted, the underlying sub-item is automatically unsubscribed from.
+* The user messages are sent to the Lightstreamer Server using the [LightstreamerClient.sendMessage](https://lightstreamer.com/api/ls-web-client/latest/LightstreamerClient.html#sendMessage) utility.
 
 <!-- END DESCRIPTION lightstreamer-example-fullscreenmario-client-javascript -->
 
@@ -30,9 +30,9 @@ The demo includes the following client-side functionalities:
 
 * As prerequisite, the [FullScreenMario Demo - Java Adapter](https://github.com/Lightstreamer/Lightstreamer-example-FullScreenMario-adapter-java#clients-using-this-adapter) has to be deployed in your local Lightstreamer Server instance. Please check out that project and follow the installation instructions provided with it.
 * Download this project
-* Get the `lightstreamer.js` file from the [latest Lightstreamer distribution](http://www.lightstreamer.com/download) 
-  and put it in the `src` folder of the demo. Alternatively, you can build a `lightstreamer.js` file from the 
-  [online generator](http://www.lightstreamer.com/docs/client_javascript_tools/generator.html).
+* Get the `lightstreamer.js` file from [npm](https://www.npmjs.com/package/lightstreamer-client-web) or [unpkg](https://unpkg.com/lightstreamer-client-web/lightstreamer.js) and put it in the `src` folder of the demo.
+  Alternatively, you can generate a customized lightstreamer.js library containing only the classes you actually use;
+  see the build instructions on the [GitHub page](https://github.com/Lightstreamer/Lightstreamer-lib-client-javascript#building).
   In that case, be sure to include the LightstreamerClient, Subscription, DynaGrid, and StatusWidget modules and to use the "Use AMD" version.
 * Get the `require.js` file form [requirejs.org](http://requirejs.org/docs/download.html) and put it in the `src` folder of the demo.
 -  Get the `gamecontroller.min.js` file from [HTML5 Virtual Game Controller](https://github.com/austinhallock/html5-virtual-game-controller) and put it in the `src` folder of the demo.
