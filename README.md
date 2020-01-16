@@ -33,7 +33,7 @@ The demo includes the following client-side functionalities:
 * Get the `lightstreamer.js` file from [npm](https://www.npmjs.com/package/lightstreamer-client-web) or [unpkg](https://unpkg.com/lightstreamer-client-web/lightstreamer.js) and put it in the `src` folder of the demo.
   Alternatively, you can generate a customized lightstreamer.js library containing only the classes you actually use;
   see the build instructions on the [GitHub page](https://github.com/Lightstreamer/Lightstreamer-lib-client-javascript#building).
-  In that case, be sure to include the LightstreamerClient, Subscription, DynaGrid, and StatusWidget modules and to use the "Use AMD" version.
+  In that case, be sure to include the LightstreamerClient, Subscription, DynaGrid, and StatusWidget modules.
 * Get the `require.js` file form [requirejs.org](http://requirejs.org/docs/download.html) and put it in the `src` folder of the demo.
 -  Get the `gamecontroller.min.js` file from [HTML5 Virtual Game Controller](https://github.com/austinhallock/html5-virtual-game-controller) and put it in the `src` folder of the demo.
 * Deploy this demo on the Lightstreamer Server (used as Web server) or in any external Web Server. Create the folders `<LS_HOME>/pages/demos/FullScreenMario` and copy here the contents of the `/src` folder of this project.
